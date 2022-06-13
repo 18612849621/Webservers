@@ -17,6 +17,8 @@
 #include "./lock/locker.h"
 #include "./threadpool/threadpool.h"
 #include "./httpconnection/http_conn.h"
+#include "./log/cycle_linkedlist.h"
+#include "./log/block_queue.h"
 
 #define MAX_FD 65535 // 最大的文件描述符个数
 #define MAX_EVENT_NUMBER 10000 // 事件数组的最大容量
@@ -31,6 +33,8 @@ void addsig(int sig, void(handler)(int)) { // 添加信号捕捉
     sigaction(sig, &sa, NULL); // 捕捉sig信号
 }
 
+// 设置文件描述符非阻塞
+extern int setnonblocking(int fd);
 // 添加文件描述符到epoll中
 extern void addfd(int epollfd, int fd, bool oneshot);
 // 从epoll中删除文件描述符
@@ -47,7 +51,7 @@ int main(int argc, char* argv[]) {
     // 获取端口号
     int port = atoi(argv[1]);
 
-    // 对SIGPIE信号进行处理 [默认会终止进程，这里用SIG_ING忽略]
+    // 对SIGPIE信号进行处理 [默认会终止进程，这里用SIG_IGN忽略]
     addsig(SIGPIPE, SIG_IGN);
 
     // 初始化线程池 [处理http连接请求]
@@ -65,6 +69,7 @@ int main(int argc, char* argv[]) {
 
     // 设置端口复用
     int reuse = 1; // 为1代表复用
+    // 复用可以从time_wait模式直接退出
     ret = setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
     assert(ret != -1);
     
@@ -112,7 +117,7 @@ int main(int argc, char* argv[]) {
                 socklen_t client_addrlen = sizeof(client_address);
                 // 接收socket
                 int connfd = accept(listenfd, (struct sockaddr*)&client_address, &client_addrlen);
-
+                // 因为ET模式 所以设置connfd为非阻塞模式
                 if ( connfd < 0 ) { // 如果出现了错误
                     printf( "errno is: %d\n", errno );
                     continue;
@@ -120,7 +125,10 @@ int main(int argc, char* argv[]) {
 
                 if (http_conn::m_user_count >= MAX_FD) {
                     // 目前连接数满了
-                    // 给客户端写一个信息：服务器正忙。（之后再写）
+                    // 给客户端写一个信息：服务器正忙。
+                    const char* meg = "Severs is busy!!";
+                    // 发送套接字
+                    send(sockfd, meg, strlen( meg ), 0 );
                     close(connfd);
                     continue;
                 }

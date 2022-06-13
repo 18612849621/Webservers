@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Jun  5 23:22:18 2022
+# Make data base, printed on Mon Jun 13 08:04:51 2022
 
 # Variables
 
@@ -59,7 +59,7 @@ LESSOPEN = | /usr/bin/lesspipe %s
 # environment
 VSCODE_CWD = /home/parallels
 # environment
-SSH_CONNECTION = 10.211.55.2 57012 10.211.55.7 22
+SSH_CONNECTION = 10.211.55.2 61854 10.211.55.7 22
 # environment
 PATH = /home/parallels/.vscode-server/bin/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # environment
@@ -67,7 +67,7 @@ XDG_RUNTIME_DIR = /run/user/1000
 # environment
 VSCODE_LOG_STACK = false
 # environment
-VSCODE_IPC_HOOK_CLI = /run/user/1000/vscode-ipc-8f6cb869-2931-40a8-bde4-19431897f1ad.sock
+VSCODE_IPC_HOOK_CLI = /run/user/1000/vscode-ipc-d0d7a9e0-08f1-4e78-861a-bbcd76d74af7.sock
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -107,7 +107,7 @@ MAKECMDGOALS := all
 # environment
 SHLVL = 1
 # environment
-XDG_SESSION_ID = 187
+XDG_SESSION_ID = 37
 # environment
 USER = parallels
 # makefile
@@ -125,7 +125,7 @@ MAKEFLAGS = pqrR
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_CLIENT = 10.211.55.2 57012 22
+SSH_CLIENT = 10.211.55.2 61854 22
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
@@ -165,9 +165,9 @@ MOTD_SHOWN = pam
 
 # Directories
 
-# . (device 59, inode 31369479): 12 files, no impossibilities.
+# . (device 57, inode 31369479): 15 files, no impossibilities.
 
-# 12 files, no impossibilities in 1 directories.
+# 15 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -222,12 +222,12 @@ httpconnection/http_conn.cpp:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 18 / storage = 182 B / avg = 10 B
-# current buf: size = 8162 B / used = 182 B / count = 18 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 21 / storage = 204 B / avg = 9 B
+# current buf: size = 8162 B / used = 204 B / count = 21 / avg = 9 B
 
-# strcache performance: lookups = 25 / hit rate = 28%
+# strcache performance: lookups = 28 / hit rate = 25%
 # hash-table stats:
-# Load=18/8192=0%, Rehash=0, Collisions=1/25=4%
-# Finished Make data base on Sun Jun  5 23:22:18 2022
+# Load=21/8192=0%, Rehash=0, Collisions=1/28=4%
+# Finished Make data base on Mon Jun 13 08:04:51 2022
 
  

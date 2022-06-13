@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/lock",
                 "${workspaceFolder}/threadpool",
-                "${workspaceFolder}/httpconnection"
+                "${workspaceFolder}/httpconnection",
+                "${workspaceFolder}/log"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
