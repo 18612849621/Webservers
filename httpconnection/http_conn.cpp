@@ -61,6 +61,7 @@ void http_conn::init(){ // 初始化连接的状态机相关配置
     m_url = 0;
     m_version = 0;
     m_linger = false;
+    cgi = 0;
     
     bytes_to_send = 0;
     bytes_have_send = 0; 
@@ -71,9 +72,10 @@ void http_conn::init(){ // 初始化连接的状态机相关配置
     bzero(m_real_file, FILENAME_LEN); // 清空获取文件的路径名字
 }
 
-void http_conn::init(int sockfd, const sockaddr_in & addr){ // 初始化新接受的连接，配置用户信息
+void http_conn::init(int sockfd, const sockaddr_in & addr, int close_log){ // 初始化新接受的连接，配置用户信息
     m_sockfd = sockfd;
     m_address = addr;
+    m_close_log = close_log;
 
     // 设置端口复用
     int reuse = 1; // 为1代表复用
@@ -104,6 +106,7 @@ bool http_conn::read(){ // 非阻塞的读
 
     // 读取到的字节
     int byte_read = 0;
+    // ET 读取模式
     while (true) { 
         // recv return: the number of bytes received 第三个参数时 缓冲区的最大尺寸
         byte_read = recv(m_sockfd, m_read_buf + m_read_idx, 
@@ -199,10 +202,11 @@ http_conn::HTTP_CODE http_conn::process_read() { // 解析HTTP请求
         // 当前的行解析状态为读取到一个完整的行，那我也可以处理
         text = get_line(); // 获取当前行的字符串内容
         m_start_line = m_checked_idx; // m_checked_idx 由于parse_line()更新到\r\n的下一个，也就是下一行的开始
+        LOG_INFO("%s", text);
         // 用于查看当前的处理状态
         std::string MMap[] = {"CHECK_STATE_REQUESTLINE", "CHECK_STATE_HEADER", "CHECK_STATE_CONTENT"};
-        std::cout << "[" << MMap[0] << "]: ";
-        printf("got 1 http line : %s\n", text);
+        // std::cout << "[" << MMap[0] << "]: ";
+        // printf("got 1 http line : %s\n", text);
 
         switch (m_check_state) {
             case CHECK_STATE_REQUESTLINE :  // 请求首行状态
@@ -228,7 +232,7 @@ http_conn::HTTP_CODE http_conn::process_read() { // 解析HTTP请求
             case CHECK_STATE_CONTENT : // 请求内容状态
             {
                 ret = parse_content(text); 
-                if (ret == GET_REQUEST) { // 头部请求分析完认为获得一个完整的客户请求
+                if (ret == GET_REQUEST) { // 请求内容分析完认为获得一个完整的客户请求
                     return do_request(); // 解析具体的请求内容(书接上一个状态，一起解析内容体部分)
                 }
                 // 没有成功解析客户请求内容体
@@ -250,6 +254,11 @@ http_conn::HTTP_CODE http_conn::parse_request_line(char * text) { // 解析请�
     //    [m_url]
     // GET      / HTTP/1.1
     m_url = strpbrk(text, " \t"); // strpbrk是在源字符串（s1）中找出最先含有搜索字符串（s2）中任一字符的位置并返回，若找不到则返回空指针。
+    
+    if (!m_url) { // 如果这行没有肯定是有问题
+        return BAD_REQUEST;
+    }
+
     // GET\0/ HTTP/1.1
     *m_url++ = '\0'; // 封口
     char * method = text;
@@ -257,10 +266,13 @@ http_conn::HTTP_CODE http_conn::parse_request_line(char * text) { // 解析请�
     // strcasecmp用来比较参数s1和s2字符串前n个字符，比较时会自动忽略大小写的差异。
     if (strcasecmp(method, "GET") == 0) {
         m_method = GET; // 说明GET解析正确，然后赋值到任务
+    }else if (strcasecmp(method, "POST") == 0) {
+        m_method = POST;
+        cgi = 1; //启动cgi 说明改成检测模式
     }else {
         return BAD_REQUEST;
     }
-
+    m_url += strspn(m_url, " \t");
     // 获取HTTP协议版本     [m_url]
     // /(这里可能有也可能没有)      HTTP/1.1
     m_version = strpbrk(m_url, " \t");
@@ -268,6 +280,7 @@ http_conn::HTTP_CODE http_conn::parse_request_line(char * text) { // 解析请�
         return BAD_REQUEST;
     }
     *m_version++ = '\0';
+    m_version += strspn(m_version, " \t");
     //                      [m_version]
     // /(这里可能有也可能没有)\0    H      TTP/1.1
     if (strcasecmp(m_version, "HTTP/1.1") != 0) {  // 这里没有存下协议的版本号 只是判断了
@@ -281,11 +294,19 @@ http_conn::HTTP_CODE http_conn::parse_request_line(char * text) { // 解析请�
         // strchr函数功能为在一个串中查找给定字符的第一个匹配之处。
         m_url = strchr(m_url, '/'); // /index.html
     }
+    // 这里添加一下https的解析
+    if (strncasecmp(m_url, "https://", 8) == 0)
+    {
+        m_url += 8;
+        m_url = strchr(m_url, '/');
+    }
 
     if (!m_url || m_url[0] != '/') {
         return BAD_REQUEST;
     }
-    
+    if (strlen(m_url) == 1) {
+        strcat(m_url, "judge.html"); // 默认页面为judge.html 也就是指打ip地址的时候也显示这
+    }
     m_check_state = CHECK_STATE_HEADER; // 主状态机检查状态变成检查请求头
 
     return NO_REQUEST; // 还需要继续解析
@@ -319,16 +340,21 @@ http_conn::HTTP_CODE http_conn::parse_headers(char * text) { // 解析请求头�
         text += strspn(text, " \t");
         m_host = text;
     }else {
-        printf("oop! unknow header %s\n", text); // 只判断自己想要的这几个头
+        // 这里不认识就不作为了
+        // printf("oop! unknow header %s\n", text); // 只判断自己想要的这几个头
     }
     return NO_REQUEST;
 } 
 http_conn::HTTP_CODE http_conn::parse_content(char * text) { // 解析请求内容
     // 这里没有具体的解析HTTP请求的消息体，只是判断他是否是被完整度入的
+    // m_read_idx 标识读缓冲区中以及读入的客户端数据的最后一个字节的下一个位置[为了方便一次性读完]
+    // m_read_idx 相当于就是本次报文内容全部内容尾巴 因为是ET模式
+    // m_content_length代表内容的长度 m_checked_idx代表已经读取到的
     if (m_read_idx >= (m_content_length + m_checked_idx)) {
         // 这里相当于完全把内容页给跳过了，直接看看缓冲区的最后一位索引（也就是下一页的开始）
         // 与内容 + （请求首行 + 请求头）== m_checked_idx 的值是否被当前缓冲区存下了
-        text[m_content_length] = '\0'; // 封口
+        text[m_content_length] = '\0'; // 封口 制作字符串
+        m_string = text;
         return GET_REQUEST;  // http请求结束
     }
     return NO_REQUEST;
@@ -368,10 +394,114 @@ http_conn::LINE_STATUS http_conn::parse_line() { // 具体解析每一行的内�
 // 如果目标文件存在、对所有用户可读，且不是目录，则使用mmap将其
 // 映射到内存地址m_file_address处，并告诉调用者获取文件成功
 http_conn::HTTP_CODE http_conn::do_request() {
-    // /home/parallels/Desktop/Parallels Shared Folders/Home/Desktop/WebServer/resources/index.html
+    // m_real_file = /home/parallels/Desktop/Parallels Shared Folders/Home/Desktop/WebServer/resources
     strcpy(m_real_file, doc_root); // 把根目录先copy过去
+    // 相当于把html的根目录放好了剩下的名字弄好就行
     int len = strlen(doc_root); // 为了下一步拼接做准备
-    strncpy(m_real_file + len, m_url, FILENAME_LEN - len - 1);
+    // LOG_INFO("path:%s, m_url:%s\n", m_real_file, m_url); // 用来查看debug用
+    // 以下为判断页面的操作 判断m_url来找到对应页面
+    const char *p = strrchr(m_url, '/'); // 找到m_url中/的位置 所以*(p + 1) 就是/后面的内容也就是文件名字
+    // 处理cgi
+    if (cgi == 1 && (*(p + 1) == '2' || *(p + 1) == '3')) {
+        LOG_INFO("登陆or注册检测ing");
+        //根据标志判断是登陆检测还是注册检测
+        char flag = m_url[1];
+
+        char * m_url_real = (char *)malloc(sizeof(char) * 200);
+        strcpy(m_url_real, "/");
+        strcat(m_url_real, m_url + 2);
+        strncpy(m_real_file + len, m_url_real, FILENAME_LEN - len - 1);
+        free(m_url_real);
+
+        //将用户名和密码提取出来
+        //user=123&passwd=123
+        char name[100], password[100];
+        int i;
+        for (i = 5; m_string[i] != '&'; ++i)
+            name[i - 5] = m_string[i];
+        name[i - 5] = '\0'; // 字符串封口
+
+        int j = 0;
+        for (i = i + 10; m_string[i] != '\0'; ++i, ++j)
+            password[j] = m_string[i];
+        password[j] = '\0'; // 字符串封口
+        
+        // cout << "name: " << name << endl;
+        // cout << "password: " << password << endl;
+        m_lock.lock(); // 防止出现幻读脏读
+        // 先更新一下当前的表
+        corm::getInstance()->get_users_info(m_users_info);
+        if (*(p + 1) == '3') {
+            //如果是注册检测，先检测数据库中是否有重名的
+            //没有重名的，进行增加数据
+            // 先制作sql语句
+            if (!m_users_info.count(name)) { // 如果没有重名的
+                // 发送查询语句 mysql为连接句柄，sql_insert为查询语句
+                // 0 成功 其他失败 使用我写的corm来处理
+                int res = corm::getInstance()->insert_user(name, password);
+                if (res == 0) { // 成功才能插入新的用户 原版本有bug
+                    m_users_info.insert(pair<string, string>(name, password));
+                    strcpy(m_url, "/log.html");
+                }else{ // 失败
+                    strcpy(m_url, "/registerError.html");
+                }
+            }else { // 重名也是失败
+                strcpy(m_url, "/registerError.html");
+            }
+        }else if (*(p + 1) == '2'){
+            // 为登陆检测 需要先有在判断
+            if(m_users_info.count(name) && m_users_info[name] == password) {
+                strcpy(m_url, "/welcome.html");
+            }else {
+                strcpy(m_url, "/logError.html");
+            }
+        }
+        m_lock.unlock();
+    }
+    // 按照获取的路径进行跳转
+    if (*(p + 1) == '0') // 这些判断相当于做了一波映射0 对应 register.html
+    {
+        char *m_url_real = (char *)malloc(sizeof(char) * 200);
+        strcpy(m_url_real, "/register.html");
+        strncpy(m_real_file + len, m_url_real, strlen(m_url_real));
+        free(m_url_real); // 用完就删除
+    }
+    else if (*(p + 1) == '1')
+    {
+        char *m_url_real = (char *)malloc(sizeof(char) * 200);
+        strcpy(m_url_real, "/log.html");
+        strncpy(m_real_file + len, m_url_real, strlen(m_url_real));
+
+        free(m_url_real);
+    }else if (*(p + 1) == '5')
+    {
+        char *m_url_real = (char *)malloc(sizeof(char) * 200);
+        strcpy(m_url_real, "/picture.html");
+        strncpy(m_real_file + len, m_url_real, strlen(m_url_real));
+
+        free(m_url_real);
+    }
+    else if (*(p + 1) == '6')
+    {
+        char *m_url_real = (char *)malloc(sizeof(char) * 200);
+        strcpy(m_url_real, "/video.html");
+        strncpy(m_real_file + len, m_url_real, strlen(m_url_real));
+
+        free(m_url_real);
+    }
+    else if (*(p + 1) == '7')
+    {
+        char *m_url_real = (char *)malloc(sizeof(char) * 200);
+        strcpy(m_url_real, "/fans.html");
+        strncpy(m_real_file + len, m_url_real, strlen(m_url_real));
+
+        free(m_url_real);
+    }else {
+        // 以上为判断页面的操作 m_url 为 /index.html <-> /文件名
+        // 这个是默认着m_url的文件 也就是不修改任何名字不用找对应，直接m_url的名字就行
+        strncpy(m_real_file + len, m_url, FILENAME_LEN - len - 1);
+    }
+
     // stat 获取文件的相关状态 -1 fail 0 success
     if (stat(m_real_file, &m_file_stat) < 0) {
         return NO_RESOURCE; // 没找到资源
@@ -492,7 +622,7 @@ bool http_conn::process_write(HTTP_CODE ret){ // 根据服务器处理HTTP请求
             break;
         case FILE_REQUEST:
             // 添加状态行 和 响应头部信息
-            add_status_line(200, ok_200_title );
+            add_status_line(200, ok_200_title);
             add_headers(m_file_stat.st_size);
             m_iv[ 0 ].iov_base = m_write_buf; // [状态行 和 响应头部]存储在写内存缓冲区的起始地址
             m_iv[ 0 ].iov_len = m_write_idx;  // 这个是内存缓冲区的长度

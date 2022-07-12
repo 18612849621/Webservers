@@ -1,24 +1,27 @@
-# include "cycle_linkedlist.h"
+# include "log.h"
 # include <iostream>
 # include <string.h>
+# include <unistd.h>
+# include <pthread.h>
 
 using namespace std;
 
 int main() {
-    string str = "我爱你123";
-    // 
-    cycle_linkedlist<string> * cycle_list = new cycle_linkedlist<string>(2);
-    cycle_list->get_linkedlen();
-    cycle_list->get_queuelen();
-    cycle_list->push("谁是大帅比");
-    cycle_list->push("哦！");
-    cycle_list->pop(str);
-    cycle_list->push("潘禹含是大帅比！");
-    cycle_list->get_queuelen();
-    cycle_list->print_list();
-    cycle_list->pop(str);
-    cycle_list->get_queuelen();
-    delete cycle_list;
-    
-    cout << "i'm finish!" << endl;
+    int m_close_log = 0;
+    int m_asny = 800;
+    Log::get_instance()->init("./ServerLog", m_close_log, 2000, 800000, m_asny); // 单例模式获取【懒汉】异步
+    if (m_asny == 0){
+        LOG_INFO("现在是同步日志");
+    }else{
+        LOG_INFO("现在是异步日志");
+        
+    }
+    LOG_INFO("现在是异步日志1");
+        LOG_INFO("现在是异步日志2");
+        LOG_INFO("现在是异步日志3");
+        LOG_INFO("现在是异步日志4");
+        LOG_INFO("现在是异步日志5");
+        LOG_INFO("现在是异步日志6");
+    sleep(1);
+    return 0;
 }

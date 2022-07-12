@@ -7,7 +7,10 @@
                 "${workspaceFolder}/lock",
                 "${workspaceFolder}/threadpool",
                 "${workspaceFolder}/httpconnection",
-                "${workspaceFolder}/log"
+                "${workspaceFolder}/log",
+                "${workspaceFolder}/corm",
+                "${workspaceFolder}/corm/mysql_connpool",
+                "${workspaceFolder}/timer"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

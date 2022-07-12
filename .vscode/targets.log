@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jun 13 08:04:51 2022
+# Make data base, printed on Tue Jul 12 11:33:39 2022
 
 # Variables
 
@@ -41,7 +41,7 @@ SHELL = /bin/sh
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en","availableLanguages":{}}
 # environment
-_ = /home/parallels/.vscode-server/bin/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5/node
+_ = /home/parallels/.vscode-server/bin/30d9c6cd9483b2cc586687151bcbcd635f373630/node
 # makefile (from 'makefile', line 1)
 MAKEFILE_LIST :=  makefile
 # 'override' directive
@@ -59,15 +59,15 @@ LESSOPEN = | /usr/bin/lesspipe %s
 # environment
 VSCODE_CWD = /home/parallels
 # environment
-SSH_CONNECTION = 10.211.55.2 61854 10.211.55.7 22
+SSH_CONNECTION = 10.211.55.2 51363 10.211.55.7 22
 # environment
-PATH = /home/parallels/.vscode-server/bin/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+PATH = /home/parallels/.vscode-server/bin/30d9c6cd9483b2cc586687151bcbcd635f373630/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
 VSCODE_LOG_STACK = false
 # environment
-VSCODE_IPC_HOOK_CLI = /run/user/1000/vscode-ipc-d0d7a9e0-08f1-4e78-861a-bbcd76d74af7.sock
+VSCODE_IPC_HOOK_CLI = /run/user/1000/vscode-ipc-6275bf59-8d84-40bd-ba03-89529ca18a37.sock
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -107,7 +107,7 @@ MAKECMDGOALS := all
 # environment
 SHLVL = 1
 # environment
-XDG_SESSION_ID = 37
+XDG_SESSION_ID = 1002
 # environment
 USER = parallels
 # makefile
@@ -125,11 +125,11 @@ MAKEFLAGS = pqrR
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_CLIENT = 10.211.55.2 61854 22
+SSH_CLIENT = 10.211.55.2 51363 22
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
-BROWSER = /home/parallels/.vscode-server/bin/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5/bin/helpers/browser.sh
+BROWSER = /home/parallels/.vscode-server/bin/30d9c6cd9483b2cc586687151bcbcd635f373630/bin/helpers/browser.sh
 # environment
 VSCODE_HANDLES_SIGPIPE = true
 # default
@@ -165,9 +165,9 @@ MOTD_SHOWN = pam
 
 # Directories
 
-# . (device 57, inode 31369479): 15 files, no impossibilities.
+# . (device 57, inode 31369479): 21 files, no impossibilities.
 
-# 15 files, no impossibilities in 1 directories.
+# 21 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -176,28 +176,46 @@ MOTD_SHOWN = pam
 # Files
 
 # Not a target:
+timer/timer.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+corm/mysql_connpool/sql_conn_pool.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 all:
 #  Command line target.
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has not been updated.
 
-server: main.cpp httpconnection/http_conn.cpp
+server: main.cpp httpconnection/http_conn.cpp log/log.cpp webServer.cpp corm/mysql_connpool/sql_conn_pool.cpp corm/corm.cpp timer/timer.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'makefile', line 4):
-		$(CXX) -o $@ $^ -pthread
+		$(CXX) -o $@ $^ -lpthread -lmysqlclient
 
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-03 09:42:20
+#  Last modified 2022-07-11 07:55:43
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 main.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+log/log.cpp:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -209,25 +227,37 @@ main.cpp:
 #  File has not been updated.
 
 # Not a target:
+webServer.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+corm/corm.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 httpconnection/http_conn.cpp:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=7/1024=1%, Rehash=0, Collisions=0/19=0%
+# Load=12/1024=1%, Rehash=0, Collisions=0/29=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 21 / storage = 204 B / avg = 9 B
-# current buf: size = 8162 B / used = 204 B / count = 21 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 31 / storage = 352 B / avg = 11 B
+# current buf: size = 8162 B / used = 352 B / count = 31 / avg = 11 B
 
-# strcache performance: lookups = 28 / hit rate = 25%
+# strcache performance: lookups = 39 / hit rate = 20%
 # hash-table stats:
-# Load=21/8192=0%, Rehash=0, Collisions=1/28=4%
-# Finished Make data base on Mon Jun 13 08:04:51 2022
+# Load=31/8192=0%, Rehash=0, Collisions=1/39=3%
+# Finished Make data base on Tue Jul 12 11:33:39 2022
 
  

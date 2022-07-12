@@ -1,0 +1,74 @@
+2022-07-11 23:19:25.567197 [info]: deal with the client(0.0.0.0)
+2022-07-11 23:19:25.570721 [info]: GET / HTTP/1.1
+2022-07-11 23:19:25.572231 [info]: Host: localhost:10000
+2022-07-11 23:19:25.572238 [info]: User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux aarch64; rv:102.0) Gecko/20100101 Firefox/102.0
+2022-07-11 23:19:25.572248 [info]: Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+2022-07-11 23:19:25.572249 [info]: Accept-Language: en-US,en;q=0.5
+2022-07-11 23:19:25.572251 [info]: Accept-Encoding: gzip, deflate, br
+2022-07-11 23:19:25.572252 [info]: Connection: keep-alive
+2022-07-11 23:19:25.572254 [info]: Upgrade-Insecure-Requests: 1
+2022-07-11 23:19:25.572255 [info]: Sec-Fetch-Dest: document
+2022-07-11 23:19:25.572256 [info]: Sec-Fetch-Mode: navigate
+2022-07-11 23:19:25.572260 [info]: Sec-Fetch-Site: none
+2022-07-11 23:19:25.572261 [info]: Sec-Fetch-User: ?1
+2022-07-11 23:19:25.572262 [info]: 
+2022-07-11 23:19:26.690302 [info]: deal with the client(0.0.0.0)
+2022-07-11 23:28:12.708859 [info]: deal with the client(0.0.0.0)
+2022-07-11 23:36:22.855667 [info]: deal with the client(0.0.0.0)
+2022-07-11 23:36:22.872623 [info]: GET / HTTP/1.1
+2022-07-11 23:36:22.875070 [info]: Host: localhost:10000
+2022-07-11 23:36:22.875076 [info]: User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux aarch64; rv:102.0) Gecko/20100101 Firefox/102.0
+2022-07-11 23:36:22.875078 [info]: Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+2022-07-11 23:36:22.875079 [info]: Accept-Language: en-US,en;q=0.5
+2022-07-11 23:36:22.875081 [info]: Accept-Encoding: gzip, deflate, br
+2022-07-11 23:36:22.875082 [info]: Connection: keep-alive
+2022-07-11 23:36:22.875083 [info]: Upgrade-Insecure-Requests: 1
+2022-07-11 23:36:22.875085 [info]: Sec-Fetch-Dest: document
+2022-07-11 23:36:22.875086 [info]: Sec-Fetch-Mode: navigate
+2022-07-11 23:36:22.875089 [info]: Sec-Fetch-Site: none
+2022-07-11 23:36:22.875090 [info]: Sec-Fetch-User: ?1
+2022-07-11 23:36:22.875092 [info]: 
+2022-07-11 23:39:04.330213 [info]: timer tick
+2022-07-11 23:39:19.854828 [info]: deal with the client(0.0.0.0)
+2022-07-11 23:39:19.855820 [info]: POST /0 HTTP/1.1
+2022-07-11 23:39:19.855905 [info]: Host: localhost:10000
+2022-07-11 23:39:19.855912 [info]: User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux aarch64; rv:102.0) Gecko/20100101 Firefox/102.0
+2022-07-11 23:39:19.855914 [info]: Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+2022-07-11 23:39:19.855915 [info]: Accept-Language: en-US,en;q=0.5
+2022-07-11 23:39:19.855917 [info]: Accept-Encoding: gzip, deflate, br
+2022-07-11 23:39:19.855918 [info]: Content-Type: application/x-www-form-urlencoded
+2022-07-11 23:39:19.855920 [info]: Content-Length: 0
+2022-07-11 23:39:19.855924 [info]: Origin: http://localhost:10000
+2022-07-11 23:39:19.855925 [info]: Connection: keep-alive
+2022-07-11 23:39:19.855927 [info]: Referer: http://localhost:10000/
+2022-07-11 23:39:19.855928 [info]: Upgrade-Insecure-Requests: 1
+2022-07-11 23:39:19.855929 [info]: Sec-Fetch-Dest: document
+2022-07-11 23:39:19.855931 [info]: Sec-Fetch-Mode: navigate
+2022-07-11 23:39:19.855932 [info]: Sec-Fetch-Site: same-origin
+2022-07-11 23:39:19.855934 [info]: Sec-Fetch-User: ?1
+2022-07-11 23:39:19.855935 [info]: 
+2022-07-11 23:39:24.494300 [info]: deal with the client(0.0.0.0)
+2022-07-11 23:39:24.494526 [info]: POST /3CGISQL.cgi HTTP/1.1
+2022-07-11 23:39:24.494609 [info]: Host: localhost:10000
+2022-07-11 23:39:24.494613 [info]: User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux aarch64; rv:102.0) Gecko/20100101 Firefox/102.0
+2022-07-11 23:39:24.494615 [info]: Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+2022-07-11 23:39:24.494617 [info]: Accept-Language: en-US,en;q=0.5
+2022-07-11 23:39:24.494618 [info]: Accept-Encoding: gzip, deflate, br
+2022-07-11 23:39:24.494620 [info]: Content-Type: application/x-www-form-urlencoded
+2022-07-11 23:39:24.494621 [info]: Content-Length: 28
+2022-07-11 23:39:24.494624 [info]: Origin: http://localhost:10000
+2022-07-11 23:39:24.494626 [info]: Connection: keep-alive
+2022-07-11 23:39:24.494627 [info]: Referer: http://localhost:10000/0
+2022-07-11 23:39:24.494629 [info]: Upgrade-Insecure-Requests: 1
+2022-07-11 23:39:24.494630 [info]: Sec-Fetch-Dest: document
+2022-07-11 23:39:24.494632 [info]: Sec-Fetch-Mode: navigate
+2022-07-11 23:39:24.494633 [info]: Sec-Fetch-Site: same-origin
+2022-07-11 23:39:24.494634 [info]: Sec-Fetch-User: ?1
+2022-07-11 23:39:24.494635 [info]: 
+2022-07-11 23:39:24.494637 [info]: user=pan2&password=woaini123
+2022-07-11 23:39:24.494638 [info]: 登陆or注册检测ing
+2022-07-11 23:39:43.013296 [info]: deal with the client(0.0.0.0)
+2022-07-11 23:39:43.014438 [info]: POST /2CGISQL.cgi HTTP/1.1
+2022-07-11 23:39:43.014448 [info]: Host: localhost:10000
+2022-07-11 23:39:43.014450 [info]: User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux aarch64; rv:102.0) Gecko/20100101 Firefox/102.0
+2022-07-11 23:39:43.014452 [info]: Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8

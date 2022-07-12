@@ -33,7 +33,7 @@ class locker {
         pthread_mutex_t m_mutex; // 定义互斥锁
 };
 
-// 条件变量类 : 判断队列中是否有数据，如果有数据那么线程唤醒进行处理
+// 条件变量类 : 判断队列中是否有数据，如果有数据那么线程唤醒进行处理[这里一率不加锁，通过外层封装保护]
 class cond {
     public:
         cond() {
@@ -46,12 +46,10 @@ class cond {
             pthread_cond_destroy(&m_cond);
         }
         
-        bool wait(pthread_mutex_t * mutex) { // 判断当前互斥锁是否可用
+        bool wait(pthread_mutex_t * mutex) { // 等待条件变量，注意这里别加锁了，如果外面也加锁就乱了
             int ret = 0;
-            pthread_mutex_lock(mutex);
             ret = pthread_cond_wait(&m_cond, mutex);  // 阻塞方式获取条件变量[加锁安全]
-            pthread_mutex_unlock(mutex);
-            return ret == 0;
+            return ret == 0; // 判断是否成功
         }
 
         bool timedwait(pthread_mutex_t * mutex, const struct timespec * t) {

@@ -18,9 +18,13 @@
 #include <errno.h>
 #include <sys/uio.h>
 #include "../lock/locker.h"
+#include "../log/log.h"
+#include "../corm/corm.h"
+#include "../timer/timer.h"
 #include <vector>
 #include <string>
 #include <iostream>
+#include <map>
 
 class http_conn {
     public:
@@ -63,11 +67,14 @@ class http_conn {
         ~http_conn() {};
 
         void process(); // 处理客户端的请求
-        void init(int sockfd, const sockaddr_in & addr); // 初始化新接受的连接，配置用户信息
+        void init(int sockfd, const sockaddr_in & addr, int close_log); // 初始化新接受的连接，配置用户信息
         void close_conn(); // 关闭连接
         bool read(); // 非阻塞的读
         bool write();  // 非阻塞的写
-
+        sockaddr_in *get_address()
+        {
+            return &m_address;
+        }
     private:
         int m_sockfd; // 该HTTP连接的socket
         sockaddr_in m_address; // 通信的socket地址
@@ -86,7 +93,6 @@ class http_conn {
         char * m_host; // 主机名
         bool m_linger; // HTTP请求是否要保持连接
         struct stat m_file_stat;                // 目标文件的状态。通过它我们可以判断文件是否存在、是否为目录、是否可读，并获取文件大小等信息
-
         char m_write_buf[ WRITE_BUFFER_SIZE ];  // 写缓冲区
         int m_write_idx;                        // 写缓冲区中待发送的字节数
         CHECK_STATE m_check_state; // 主状态机当前所处的状态
@@ -99,7 +105,16 @@ class http_conn {
         int m_iv_count; 
         int bytes_to_send;              // 将要发送的数据的字节数
         int bytes_have_send;            // 已经发送的字节数
-
+        int m_close_log; // 控制日志
+        int cgi;
+        string m_string; // 用于存储解析post中的内容
+        // MYSQL相关
+        map<string, string> m_users_info; // 用于获取所有用户的账户密码
+        locker m_lock;
+        // 本连接用户的名字和密码 用于登陆验证用 通过post获得
+        string userName;
+        string passWord;
+        
         void init(); // 初始化连接其余的信息
         HTTP_CODE process_read(); // 解析HTTP请求
         bool process_write(HTTP_CODE ret); // 根据服务器处理HTTP请求结果，决定返回给客户端的内容
@@ -111,6 +126,7 @@ class http_conn {
         LINE_STATUS parse_line();  //具体解析每一行的内容
         char * get_line() { return m_read_buf + m_start_line; } // 获取一行数据[相当于找到对应的行首元素的指针返回]
         
+
         // 这一组函数被process_write调用以填充HTTP应答。
         void unmap(); // 对内存映射区执行munmap操作（相当于释放内存映射区的内容）
         bool add_response( const char* format, ... );

@@ -1,5 +1,5 @@
 make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/media/psf/Home/Desktop/WebServer'
-g++ -o server main.cpp httpconnection/http_conn.cpp -pthread
+g++ -o server main.cpp httpconnection/http_conn.cpp log/log.cpp webServer.cpp corm/mysql_connpool/sql_conn_pool.cpp corm/corm.cpp timer/timer.cpp -lpthread -lmysqlclient
 make: Leaving directory '/media/psf/Home/Desktop/WebServer'
  
