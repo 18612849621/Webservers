@@ -1,0 +1,131 @@
+version: "3.4"
+
+x-defaults: &default
+  restart: unless-stopped
+# 使用当前目录的 Dockerfile 来构建 docker 镜像
+  build: 
+    context: ./Wb
+    dockerfile: Dockerfile
+  volumes:
+# 本文件存放于docker/中，因而此处要把上级目录(源代码目录)挂载到工作目录
+    - ..:/home/pan/projects/
+
+services:
+  # nginx
+  nginx:
+    container_name: nginx
+    image: nginx:1.16.1
+    restart: always
+    ports:
+      - 127.0.0.1:80:80
+    volumes:
+      - ./nginx/html:/usr/share/nginx/html
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+ 
+    # privileged: true
+    networks:
+      - wbnet
+
+  # mysql
+  db:
+    container_name: mysql
+    image: 'mysql/mysql-server:latest'
+    restart: "always"
+    # ports:
+    #   # 宿主机3307 就是 docker3306
+      # - 3307:3306
+    volumes: # 数据初始化
+      - ./sqlscripts:/docker-entrypoint-initdb.d/
+      # - ./mysql_data:/var/lib/mysql
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci 
+    environment:
+      - TZ=Asia/Shanghai # 设置容器时区与宿主机保持一致
+      - MYSQL_ROOT_PASSWORD=123456 # 设置root密码
+      - MYSQL_DATABASE=yourdb # 设置数据库
+      - MYSQL_USER=pan # 增加一个MySQL用户，并启用远程连接
+      - MYSQL_PASSWORD=123456 # 设置用户密码
+    networks:
+      - wbnet
+  
+  # Webservers
+  projects-dev1:
+    <<: *default
+    container_name: wb1
+    hostname: "projects"
+# 如果在Dockerfile中修改过用户名，此处也要对应修改用户名和工作目录
+    user: pan
+    working_dir: /home/pan/projects
+# 修改安全配置，以运行gdb server
+    # security_opt:
+    #   - seccomp:unconfined
+    # cap_add:
+      # - SYS_PTRACE
+# 开启 ssh 服务，这样 clion 就能通过 ssh 连接进来了 并开启了server服务
+# 同时通过 tailf 命令保持 container 不要退出的状态
+    command: bash -c "/home/pan/projects/server 10000 && tail -f /dev/null"
+    # bash -c "sudo service ssh restart && /home/pan/projects/server 10000 && tail -f /dev/null"
+
+# 此处将容器的10000端口映射到主机的10000上，且仅对本机开放 一般情况下开放外部端口 只开放nginx
+    # ports: 
+      # - "127.0.0.1:10000:10000"
+# 设置时区
+    environment:
+      - SET_CONTAINER_TIMEZONE=true
+      - CONTAINER_TIMEZONE=Asia/Shanghai
+    networks:
+      - wbnet
+
+
+  # 制作第二个服务器的名字
+  projects-dev2:
+    <<: *default
+    container_name: wb2
+    hostname: "projects"
+# 如果在Dockerfile中修改过用户名，此处也要对应修改用户名和工作目录
+    user: pan
+    working_dir: /home/pan/projects
+# 修改安全配置，以运行gdb server
+#     security_opt:
+#       - seccomp:unconfined
+#     cap_add:
+#       - SYS_PTRACE
+# # 开启 ssh 服务，这样 clion 就能通过 ssh 连接进来了
+# # 同时通过 tailf 命令保持 container 不要退出的状态
+    command: bash -c "/home/pan/projects/server 10000 && tail -f /dev/null"
+      # bash -c "sudo service ssh restart && /home/pan/projects/server 10000 && tail -f /dev/null"
+# 此处将容器的10000端口映射到主机的10000上，且仅对本机开放
+    # ports: 
+      # - "127.0.0.1:10001:10000"
+# 设置时区
+    environment:
+      - SET_CONTAINER_TIMEZONE=true
+      - CONTAINER_TIMEZONE=Asia/Shanghai
+    networks:
+      - wbnet
+
+  # 制作第二个服务器的名字
+  projects-dev3:
+    <<: *default
+    container_name: wb3
+    hostname: "projects"
+# 如果在Dockerfile中修改过用户名，此处也要对应修改用户名和工作目录
+    user: pan
+    working_dir: /home/pan/projects
+# # 同时通过 tailf 命令保持 container 不要退出的状态
+    command: bash -c "/home/pan/projects/server 10000 && tail -f /dev/null"
+      # bash -c "sudo service ssh restart && /home/pan/projects/server 10000 && tail -f /dev/null"
+# 此处将容器的10000端口映射到主机的10000上，且仅对本机开放
+    # ports: 
+      # - "127.0.0.1:10002:10000"
+# 设置时区
+    environment:
+      - SET_CONTAINER_TIMEZONE=true
+      - CONTAINER_TIMEZONE=Asia/Shanghai
+    networks:
+      - wbnet
+ 
+networks:
+  wbnet:     #网络名称
+    driver: bridge      #桥接模式

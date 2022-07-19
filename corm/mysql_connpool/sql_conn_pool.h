@@ -46,12 +46,12 @@ class sql_connection_pool{
 
 // RAII的核心思想是将资源或者状态与对象的生命周期绑定，
 // 通过C++的语言机制，实现资源和状态的安全管理,智能指针是RAII最好的例子
-class connectionRALL{ // 将连接池对象封装成RALL 来操作他
+class connectionRAII{ // 将连接池对象封装成RAII 来操作他
     public:
-        connectionRALL(MYSQL *& con, sql_connection_pool * connPool);
-        ~connectionRALL();
+        connectionRAII(MYSQL *& con, sql_connection_pool * connPool);
+        ~connectionRAII();
 
     private:
-        MYSQL * conRALL;
-        sql_connection_pool * poolRALL;
+        MYSQL * conRAII;
+        sql_connection_pool * poolRAII;
 };

@@ -20,17 +20,17 @@ void corm::init(string userName, string PassWord, string DataBaseName, int close
     m_databaseName = DataBaseName;
     m_close_log = close_log;
     m_port = 3306; // sql使用默认端口号3306【个人推测应该是使用了端口复用 要不然不可能所有连接池用同一个端口】
-    m_sql_num = 4; // 机器是4核的就先开这么大 sql连接池大小
+    m_sql_num = 8; // 机器是4核的就先开这么大 sql连接池大小
 
     m_sql_connPool = sql_connection_pool::GetInstance(); // 获取单例
-    m_sql_connPool->init("localhost", m_userName, m_passWord, m_databaseName, m_port, m_sql_num, m_close_log);
+    m_sql_connPool->init("mysql", m_userName, m_passWord, m_databaseName, m_port, m_sql_num, m_close_log);
 
 }
 
 void corm::get_users_info(map<string, string> &usersInfo){
     // 先从连接池中获取一个mysql连接
     MYSQL * mysql = NULL;
-    connectionRALL mysqlRALL(mysql, m_sql_connPool); // RALL机制获得连接 函数过后又释放连接
+    connectionRAII mysqlRAII(mysql, m_sql_connPool); // RAII机制获得连接 函数过后又释放连接
 
     // 在user表中检索username, passwd数据，浏览器端输入
     if (mysql_query(mysql, "SELECT username, passwd FROM user")){
@@ -59,7 +59,7 @@ void corm::get_users_info(map<string, string> &usersInfo){
 int corm::insert_user(string name, string password) {
     // 先从连接池中获取一个mysql连接
     MYSQL * mysql = NULL;
-    connectionRALL sqlRALL(mysql, m_sql_connPool);
+    connectionRAII sqlRAII(mysql, m_sql_connPool);
     // 开始执行插入操作
     char * sql_insert = (char *)malloc(sizeof(char) * 200);
     strcpy(sql_insert, "INSERT INTO user(username, passwd) VALUES(");

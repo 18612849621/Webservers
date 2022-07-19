@@ -10,7 +10,7 @@
 template<typename T>
 class threadpool { // 线程池类
     public:
-        threadpool(int thread_number = 4, int max_requests = 10000);  // 因为本机器是4核的
+        threadpool(int thread_number = 8, int max_requests = 65535);  // 因为本机器是4核的
         ~threadpool();
         bool append(T* request); // 添加任务
     

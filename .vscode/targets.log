@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Jul 12 11:33:39 2022
+# Make data base, printed on Sun Jul 17 20:37:18 2022
 
 # Variables
 
@@ -24,8 +24,6 @@ XDG_SESSION_CLASS = user
 VSCODE_AGENT_FOLDER = /home/parallels/.vscode-server
 # environment
 XDG_SESSION_TYPE = tty
-# environment
-VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
@@ -41,7 +39,7 @@ SHELL = /bin/sh
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en","availableLanguages":{}}
 # environment
-_ = /home/parallels/.vscode-server/bin/30d9c6cd9483b2cc586687151bcbcd635f373630/node
+_ = /home/parallels/.vscode-server/bin/b06ae3b2d2dbfe28bca3134cc6be65935cdfea6a/node
 # makefile (from 'makefile', line 1)
 MAKEFILE_LIST :=  makefile
 # 'override' directive
@@ -51,31 +49,39 @@ CXXFLAGS = -g
 # environment
 XDG_DATA_DIRS = /usr/local/share:/usr/share:/var/lib/snapd/desktop
 # environment
+ROS_ETC_DIR = /opt/ros/noetic/etc/ros
+# environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-VSCODE_VERBOSE_LOGGING = true
+ROS_PACKAGE_PATH = /opt/ros/noetic/share
+# environment
+ROS_PYTHON_VERSION = 3
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
 VSCODE_CWD = /home/parallels
 # environment
-SSH_CONNECTION = 10.211.55.2 51363 10.211.55.7 22
+SSH_CONNECTION = 10.211.55.2 59045 10.211.55.7 22
 # environment
-PATH = /home/parallels/.vscode-server/bin/30d9c6cd9483b2cc586687151bcbcd635f373630/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+PATH = /home/parallels/.vscode-server/bin/b06ae3b2d2dbfe28bca3134cc6be65935cdfea6a/bin/remote-cli:/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
-VSCODE_LOG_STACK = false
+ROS_ROOT = /opt/ros/noetic/share/ros
 # environment
-VSCODE_IPC_HOOK_CLI = /run/user/1000/vscode-ipc-6275bf59-8d84-40bd-ba03-89529ca18a37.sock
+ELECTRON_RUN_AS_NODE = 1
+# environment
+VSCODE_IPC_HOOK_CLI = /run/user/1000/vscode-ipc-e530d522-e70e-40f3-ba1e-50264c8ba91a.sock
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
+CMAKE_PREFIX_PATH = /opt/ros/noetic
+# environment
 LS_COLORS = 
+# environment
+ROS_DISTRO = noetic
 # automatic
 %F = $(notdir $%)
-# environment
-VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /media/psf/Home/Desktop/WebServer
 # default
@@ -83,9 +89,13 @@ PWD = /media/psf/Home/Desktop/WebServer
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
+PKG_CONFIG_PATH = /opt/ros/noetic/lib/pkgconfig
+# environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
 HOME = /home/parallels
+# environment
+LD_LIBRARY_PATH = /opt/ros/noetic/lib
 # environment
 LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
@@ -107,11 +117,13 @@ MAKECMDGOALS := all
 # environment
 SHLVL = 1
 # environment
-XDG_SESSION_ID = 1002
+XDG_SESSION_ID = 117
 # environment
 USER = parallels
 # makefile
 .DEFAULT_GOAL := server
+# environment
+ROSLISP_PACKAGE_DIRECTORIES = 
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # default
@@ -120,16 +132,20 @@ MAKE_COMMAND := make
 .VARIABLES := 
 # automatic
 *F = $(notdir $*)
+# environment
+PYTHONPATH = /opt/ros/noetic/lib/python3/dist-packages
 # makefile
 MAKEFLAGS = pqrR
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_CLIENT = 10.211.55.2 51363 22
+SSH_CLIENT = 10.211.55.2 59045 22
+# environment
+ROS_VERSION = 1
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
-BROWSER = /home/parallels/.vscode-server/bin/30d9c6cd9483b2cc586687151bcbcd635f373630/bin/helpers/browser.sh
+BROWSER = /home/parallels/.vscode-server/bin/b06ae3b2d2dbfe28bca3134cc6be65935cdfea6a/bin/helpers/browser.sh
 # environment
 VSCODE_HANDLES_SIGPIPE = true
 # default
@@ -138,6 +154,8 @@ MAKEFILES :=
 <F = $(notdir $<)
 # makefile (from 'makefile', line 1)
 CXX = g++
+# environment
+ROS_MASTER_URI = http://localhost:11311
 # environment
 LC_ALL = C
 # automatic
@@ -153,11 +171,9 @@ MAKE_HOST := aarch64-unknown-linux-gnu
 # environment
 LANG = C
 # environment
-VSCODE_EXTHOST_WILL_SEND_SOCKET = true
-# environment
 MOTD_SHOWN = pam
 # variable set hash-table stats:
-# Load=72/1024=7%, Rehash=0, Collisions=9/99=9%
+# Load=80/1024=8%, Rehash=0, Collisions=9/107=8%
 
 # Pattern-specific Variable Values
 
@@ -165,9 +181,9 @@ MOTD_SHOWN = pam
 
 # Directories
 
-# . (device 57, inode 31369479): 21 files, no impossibilities.
+# . (device 59, inode 31369479): 20 files, no impossibilities.
 
-# 21 files, no impossibilities in 1 directories.
+# 20 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -252,12 +268,12 @@ httpconnection/http_conn.cpp:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 31 / storage = 352 B / avg = 11 B
-# current buf: size = 8162 B / used = 352 B / count = 31 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 30 / storage = 331 B / avg = 11 B
+# current buf: size = 8162 B / used = 331 B / count = 30 / avg = 11 B
 
-# strcache performance: lookups = 39 / hit rate = 20%
+# strcache performance: lookups = 38 / hit rate = 21%
 # hash-table stats:
-# Load=31/8192=0%, Rehash=0, Collisions=1/39=3%
-# Finished Make data base on Tue Jul 12 11:33:39 2022
+# Load=30/8192=0%, Rehash=0, Collisions=1/38=3%
+# Finished Make data base on Sun Jul 17 20:37:18 2022
 
  

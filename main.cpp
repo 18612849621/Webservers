@@ -7,7 +7,7 @@ int main(int argc, char* argv[]) {
         exit(-1);
     }
     // 数据库连接信息
-    string userName = "root";
+    string userName = "pan";
     string passWord = "123456";
     WebServers* server = new WebServers(atoi(argv[1]), userName, passWord);
     server->servers_start();

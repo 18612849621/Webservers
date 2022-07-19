@@ -111,14 +111,14 @@ sql_connection_pool::~sql_connection_pool(){
     DestroyPool(); // 使用刚才定义好的函数处理
 }
 
-connectionRALL::connectionRALL(MYSQL *& SQL, sql_connection_pool* connPool) {
+connectionRAII::connectionRAII(MYSQL *& SQL, sql_connection_pool* connPool) {
     // 不用指针的引用的话就得用双指针，要不然这个指针本身的值是不会改变的就成了局部指针了没用
     // 核心：当指针本身作为参数需要进行处理时，想要从外部继承他的值就需要通过引用或者指针的指针来改变
     SQL = connPool->GetConnection(); // 通过指针的指针获取单例产生的对象的指针
-    conRALL = SQL;  // 获取对应的对象
-    poolRALL = connPool; // 获取对应的连接池
+    conRAII = SQL;  // 获取对应的对象
+    poolRAII = connPool; // 获取对应的连接池
 }
 
-connectionRALL::~connectionRALL() {
-    poolRALL->ReleaseConnection(conRALL); // 把生成的数据库连接池对象删除
+connectionRAII::~connectionRAII() {
+    poolRAII->ReleaseConnection(conRAII); // 把生成的数据库连接池对象删除
 }

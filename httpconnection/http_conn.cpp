@@ -15,7 +15,7 @@ int http_conn::m_epollfd = -1; // 所有socket上的事件都被注册到同一�
 int http_conn::m_user_count = 0; // 统计用户的数量
 
 // 网站的根目录
-const char* doc_root = "/home/parallels/Desktop/Parallels Shared Folders/Home/Desktop/WebServer/resources";
+const char* doc_root = "/home/pan/projects/resources";
 
 int setnonblocking(int fd) { // 设置文件描述符非阻塞
     int old_option = fcntl(fd, F_GETFL);  // 获取旧设置
